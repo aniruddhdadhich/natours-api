@@ -4,10 +4,19 @@ const fs = require('fs');
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`));
 
 //Checking ID by param middleware
-
 exports.checkID = (req, res, next, val) => {
     if (+req.params.id > tours.length) {
         return res.status(404).json({ status: 'failure', message: 'Invalid ID' });
+    }
+    next();
+};
+
+exports.checkBody = (req, res, next) => {
+    if (!req.body.name || !req.body.price) {
+        res.status(400).json({
+            status: 'failed',
+            message: 'Bad Request',
+        });
     }
     next();
 };
